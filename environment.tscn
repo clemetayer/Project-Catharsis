@@ -1,0 +1,105 @@
+[gd_scene load_steps=9 format=3 uid="uid://cppg0k35hfkp4"]
+
+[ext_resource type="Script" path="res://Movement.cs" id="1_a6tam"]
+[ext_resource type="Theme" uid="uid://drq4kyp52u414" path="res://theme/endurance_bar.tres" id="2_ioe8q"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4jjxd"]
+size = Vector3(1000, 1, 1000)
+
+[sub_resource type="BoxMesh" id="BoxMesh_phwq6"]
+size = Vector3(1000, 1, 1000)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_vl3wy"]
+height = 1.8
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_mao5d"]
+height = 1.8
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_oc5cm"]
+size = Vector3(1, 10, 20)
+
+[sub_resource type="BoxMesh" id="BoxMesh_n5s83"]
+size = Vector3(1, 10, 20)
+
+[node name="environment" type="Node3D"]
+
+[node name="terrain" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="terrain"]
+shape = SubResource("BoxShape3D_4jjxd")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="terrain"]
+mesh = SubResource("BoxMesh_phwq6")
+
+[node name="Player" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+script = ExtResource("1_a6tam")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player"]
+mesh = SubResource("CapsuleMesh_vl3wy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+shape = SubResource("CapsuleShape3D_mao5d")
+
+[node name="FirstCamera" type="Camera3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 0.9509, 0.309498, 0, -0.309498, 0.9509, 0, 2, 5)
+current = true
+
+[node name="WallCheck" type="Node3D" parent="Player"]
+
+[node name="wall_check_high" type="RayCast3D" parent="Player/WallCheck"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+target_position = Vector3(0, 0, -1)
+
+[node name="wall_check_low" type="RayCast3D" parent="Player/WallCheck"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+target_position = Vector3(0, 0, -1)
+
+[node name="UI" type="Control" parent="Player"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 3.0
+offset_top = 1.0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Endurance" type="Node" parent="Player/UI"]
+
+[node name="EnduranceBar" type="ProgressBar" parent="Player/UI/Endurance"]
+offset_left = 10.0
+offset_top = 17.0
+offset_right = 574.0
+offset_bottom = 44.0
+theme = ExtResource("2_ioe8q")
+value = 50.0
+show_percentage = false
+
+[node name="Endurance" type="Node" parent="Player"]
+
+[node name="regenDelayTimer" type="Timer" parent="Player/Endurance"]
+wait_time = 5.0
+one_shot = true
+
+[node name="regenTimer" type="Timer" parent="Player/Endurance"]
+one_shot = true
+
+[node name="dashTimer" type="Timer" parent="Player/Endurance"]
+wait_time = 0.5
+one_shot = true
+
+[node name="jumpTimer" type="Timer" parent="Player/Endurance"]
+wait_time = 0.5
+one_shot = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.0949076, 0.995486, 0, -0.995486, 0.0949076, 0, 77.9925, 77.1167)
+
+[node name="wall" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="wall"]
+shape = SubResource("BoxShape3D_oc5cm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="wall"]
+mesh = SubResource("BoxMesh_n5s83")
