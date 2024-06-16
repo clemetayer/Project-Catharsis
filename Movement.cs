@@ -33,7 +33,7 @@ public partial class Movement : CharacterBody3D
     [Export]
     public int dashEnduranceCost = 5;  
     
-
+    private bool isWalking = false;
     private bool isRunning = false;
     private bool isClimbing = false;
     private bool isDashing = false;
@@ -101,14 +101,17 @@ public partial class Movement : CharacterBody3D
         is_running();
         dash(direction);
         if (isDashing){
+            isWalking = false;
             velocity.X = dashDirection.X * dashSpeed;
             velocity.Z = dashDirection.Z * dashSpeed;
         }
         else{
             if(direction != Vector3.Zero){
+                isWalking = true;
                 velocity.X = direction.X * speed;
                 velocity.Z = direction.Z * speed;
             }else{
+                isWalking = false;
                 velocity.X = Mathf.MoveToward(velocity.X, 0, acceleration);
                 velocity.Z = Mathf.MoveToward(velocity.Z, 0, acceleration);
                 //velocity = Vector3.Zero;
