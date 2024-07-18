@@ -1,9 +1,5 @@
-# meta-default: true
-# meta-description: Base template for Node with default Godot cycle methods (and some organisation hints)
-# tool
-extends _BASE_
-# class_name Class
-# docstring
+extends CharacterBody3D
+# Basic ennemy script
 
 ##### SIGNALS #####
 # Node signals
@@ -13,20 +9,22 @@ extends _BASE_
 
 ##### VARIABLES #####
 #---- CONSTANTS -----
-# const constant := 10 # Optionnal comment
+# const constant = 10 # Optionnal comment
 
 #---- EXPORTS -----
-# export(int) var EXPORT_NAME # Optionnal comment
+@export var BASE_HEALTH := 10
 
 #---- STANDARD -----
 #==== PUBLIC ====
 # var public_var # Optionnal comment
 
 #==== PRIVATE ====
-# var _private_var # Optionnal comment
+var _current_health := BASE_HEALTH
 
 #==== ONREADY ====
-# onready var onready_var # Optionnal comment
+@onready var onready_paths := {
+	"health_label": $"HealthLabel"
+}
 
 ##### PROCESSING #####
 # Called when the object is initialized.
@@ -42,9 +40,13 @@ func _process(_delta):
 	pass
 
 ##### PUBLIC METHODS #####
-# Methods that are intended to be "visible" to other nodes or scripts
-# func public_method(arg : int) -> void:
-#     pass
+func hurt(amount: int, _stance: EntityCommon.stances) -> void:
+	_current_health -= amount
+	onready_paths.health_label.text = "%d" % _current_health
+	if _current_health <= 0 :
+		queue_free()
+	
+	
 
 ##### PROTECTED METHODS #####
 # Methods that are intended to be used exclusively by this scripts
@@ -53,3 +55,4 @@ func _process(_delta):
 
 ##### SIGNAL MANAGEMENT #####
 # Functions that should be triggered when a specific signal is received
+

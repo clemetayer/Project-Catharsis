@@ -4,9 +4,6 @@ extends CharacterBody3D
 ##### SIGNALS #####
 # Node signals
 
-##### ENUMS #####
-# enumerations
-
 ##### VARIABLES #####
 #---- CONSTANTS -----
 const SPEED = 5.0
@@ -23,11 +20,14 @@ const JUMP_VELOCITY = 4.5
 var _gravity : float = ProjectSettings.get_setting("physics/3d/default_gravity") # Get the gravity from the project settings to be synced with RigidBody nodes.
 var _mouse_sensitivity : float = Settings.mouse_sensitivity
 var _direction := Vector2.ZERO # direction from the w/a/s/d keys, "flattened" to the floor. Actually in 3D : Vector2(z,x)
+var _stance := EntityCommon.stances.MIDDLE
 
 #==== ONREADY ====
 @onready var onready_paths := {
 	"rotation_helper": $"RotationHelper",
 	"camera": $"RotationHelper/Camera3D",
+	"weapon_animations": $"WeaponAnimation",
+	"weapon": $"Weapon"
 }
 
 ##### PROCESSING #####
@@ -61,7 +61,6 @@ func _physics_process(delta):
 		velocity.y = 0
 
 	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
 	var wished_dir = _get_wished_direction()
 	var horizontal_wished_dir = Vector3(wished_dir.x, 0, wished_dir.z).normalized()
 	if wished_dir:
@@ -82,7 +81,15 @@ func _physics_process(delta):
 func _handle_inputs() -> void:
 	_handle_remove_mouse_mode_capture()
 	_handle_direction_inputs()
-	
+	_handle_stances_inputs()
+	_handle_attack_inputs()
+
+# Temporary, to free the mouse by pressing escape
+func _handle_remove_mouse_mode_capture() -> void:
+	if Input.is_action_just_pressed("ui_cancel"):
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED if Input.mouse_mode == Input.MOUSE_MODE_VISIBLE else Input.MOUSE_MODE_VISIBLE
+
+
 func _handle_direction_inputs() -> void:
 	_direction = Vector2.ZERO # reset the direction
 	if Input.is_action_pressed("Front"):
@@ -95,10 +102,22 @@ func _handle_direction_inputs() -> void:
 		_direction.y += 1
 	_direction = _direction.normalized()
 
-# Temporary, to free the mouse by pressing escape
-func _handle_remove_mouse_mode_capture() -> void:
-	if Input.is_action_just_pressed("ui_cancel"):
-		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED if Input.mouse_mode == Input.MOUSE_MODE_VISIBLE else Input.MOUSE_MODE_VISIBLE
+func _handle_stances_inputs() -> void:
+	if Input.is_action_just_pressed("stance_high"):
+		_switch_to_stance(EntityCommon.stances.HIGH)
+	elif Input.is_action_just_pressed("stance_middle"):
+		_switch_to_stance(EntityCommon.stances.MIDDLE)
+	elif Input.is_action_just_pressed("stance_low"):
+		_switch_to_stance(EntityCommon.stances.LOW)
+
+func _switch_to_stance(stance : EntityCommon.stances) -> void:
+	_stance = stance
+	onready_paths.weapon_animations.play_stance_idle(stance)
+	onready_paths.weapon.stance = stance
+
+func _handle_attack_inputs() -> void:
+	if Input.is_action_just_pressed("attack"):
+		onready_paths.weapon_animations.play_stance_attack(_stance)
 
 func _get_wished_direction() -> Vector3:
 	var dir = Vector3()
