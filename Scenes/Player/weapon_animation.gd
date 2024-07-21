@@ -1,5 +1,5 @@
 extends AnimationPlayer
-# player's weapon animation
+# ennemy's weapon animation
 
 ##### SIGNALS #####
 # Node signals
@@ -54,6 +54,15 @@ func play_stance_attack(stance : EntityCommon.stances) -> void:
 			play("attack_middle")
 		EntityCommon.stances.LOW:
 			play("attack_low")
+
+func play_stance_defend(stance: EntityCommon.stances) -> void:
+	match stance:
+		EntityCommon.stances.HIGH:
+			play("defending_high")
+		EntityCommon.stances.MIDDLE:
+			play("defending_middle")
+		EntityCommon.stances.LOW:
+			play("defending_low")
 
 ##### PROTECTED METHODS #####
 # Methods that are intended to be used exclusively by this scripts

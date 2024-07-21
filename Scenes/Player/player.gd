@@ -10,7 +10,7 @@ const SPEED = 5.0
 const JUMP_VELOCITY = 4.5
 
 #---- EXPORTS -----
-# export(int) var EXPORT_NAME # Optionnal comment
+@export var BASE_HEALTH := 30
 
 #---- STANDARD -----
 #==== PUBLIC ====
@@ -21,13 +21,16 @@ var _gravity : float = ProjectSettings.get_setting("physics/3d/default_gravity")
 var _mouse_sensitivity : float = Settings.mouse_sensitivity
 var _direction := Vector2.ZERO # direction from the w/a/s/d keys, "flattened" to the floor. Actually in 3D : Vector2(z,x)
 var _stance := EntityCommon.stances.MIDDLE
+var _defending := false
+var _health := BASE_HEALTH
 
 #==== ONREADY ====
 @onready var onready_paths := {
 	"rotation_helper": $"RotationHelper",
 	"camera": $"RotationHelper/Camera3D",
 	"weapon_animations": $"WeaponAnimation",
-	"weapon": $"Weapon"
+	"weapon": $"Weapon",
+	"health_label": $"Health"
 }
 
 ##### PROCESSING #####
@@ -37,6 +40,8 @@ func _init():
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	onready_paths.weapon_animations.play_stance_idle(_stance)
+	onready_paths.health_label.text = "%s" % BASE_HEALTH
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 # Called every frame. 'delta' is the elapsed time since the previous frame. Remove the "_" to use it.
@@ -50,7 +55,7 @@ func _input(event):
 		# Rotation around the x axis
 		onready_paths.rotation_helper.rotate_x(-deg_to_rad(event.relative.y * _mouse_sensitivity))
 		var camera_rot = onready_paths.rotation_helper.rotation_degrees
-		camera_rot.x = clamp(camera_rot.x, -75, 95) # 90° +- camera angle
+		camera_rot.x = clamp(camera_rot.x, -75, 105) # 90° +- camera angle
 		onready_paths.rotation_helper.rotation_degrees = camera_rot
 
 func _physics_process(delta):
@@ -73,9 +78,13 @@ func _physics_process(delta):
 	move_and_slide()
 
 ##### PUBLIC METHODS #####
-# Methods that are intended to be "visible" to other nodes or scripts
-# func public_method(arg : int) -> void:
-#     pass
+func hurt(amount : int, stance : EntityCommon.stances) -> void:
+	var defending_stance_multiplier = EntityCommon.defending_stance_multiplier(_stance, stance) if _defending else 1
+	_health -= amount * defending_stance_multiplier
+	onready_paths.health_label.text = "%d" % _health
+	if _health <= 0:
+		print("dead")
+		_health = 0
 
 ##### PROTECTED METHODS #####
 func _handle_inputs() -> void:
@@ -83,6 +92,7 @@ func _handle_inputs() -> void:
 	_handle_direction_inputs()
 	_handle_stances_inputs()
 	_handle_attack_inputs()
+	_handle_defense_inputs()
 
 # Temporary, to free the mouse by pressing escape
 func _handle_remove_mouse_mode_capture() -> void:
@@ -116,8 +126,15 @@ func _switch_to_stance(stance : EntityCommon.stances) -> void:
 	onready_paths.weapon.stance = stance
 
 func _handle_attack_inputs() -> void:
-	if Input.is_action_just_pressed("attack"):
+	if Input.is_action_just_pressed("attack") and not Input.is_action_pressed("defense"):
 		onready_paths.weapon_animations.play_stance_attack(_stance)
+
+func _handle_defense_inputs() -> void:
+	_defending = Input.is_action_pressed("defense")
+	if Input.is_action_pressed("defense"):
+		onready_paths.weapon_animations.play_stance_defend(_stance)
+	elif Input.is_action_just_released("defense"):
+		onready_paths.weapon_animations.play_stance_idle(_stance)
 
 func _get_wished_direction() -> Vector3:
 	var dir = Vector3()

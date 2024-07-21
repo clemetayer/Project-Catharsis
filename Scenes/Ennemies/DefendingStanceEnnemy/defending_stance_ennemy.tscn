@@ -6,13 +6,13 @@
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_fvrho"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gt63l"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mehts"]
 resource_local_to_scene = true
 albedo_color = Color(0, 1, 0, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_eqast"]
 resource_local_to_scene = true
-material = SubResource("StandardMaterial3D_gt63l")
+material = SubResource("StandardMaterial3D_mehts")
 size = Vector3(1, 2, 0.1)
 
 [sub_resource type="Animation" id="Animation_rqp4i"]

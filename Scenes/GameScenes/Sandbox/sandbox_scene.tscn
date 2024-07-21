@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://pfw58w4uu1dn"]
+[gd_scene load_steps=6 format=3 uid="uid://pfw58w4uu1dn"]
 
 [ext_resource type="PackedScene" uid="uid://d4depmc4sfihq" path="res://Scenes/Maps/sandbox_map.tscn" id="1_36y08"]
 [ext_resource type="PackedScene" uid="uid://cmejnw174nnx0" path="res://Scenes/Player/player.tscn" id="1_i5iif"]
 [ext_resource type="PackedScene" uid="uid://bw4te67mnwecp" path="res://Scenes/Ennemies/BasicEnnemy/basic_ennemy.tscn" id="3_7a1lc"]
+[ext_resource type="PackedScene" uid="uid://bva5hkrph3xwm" path="res://Scenes/Ennemies/AttackingStanceEnnemy/attacking_stance_ennemy.tscn" id="4_f3qkl"]
 [ext_resource type="PackedScene" uid="uid://b8vbwg1mm5oah" path="res://Scenes/Ennemies/DefendingStanceEnnemy/defending_stance_ennemy.tscn" id="4_pjhon"]
 
 [node name="SandboxScene" type="Node3D"]
@@ -11,18 +12,32 @@
 
 [node name="Player" parent="." instance=ExtResource("1_i5iif")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-collision_layer = 2
 
 [node name="BasicEnnemy" parent="." instance=ExtResource("3_7a1lc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -10)
 
-[node name="DefendingStanceEnnemy" parent="." instance=ExtResource("4_pjhon")]
+[node name="AttackingEnnemies" type="Node3D" parent="."]
+
+[node name="AttackingStanceEnnemy" parent="AttackingEnnemies" instance=ExtResource("4_f3qkl")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 5, 1, -10)
+
+[node name="AttackingStanceEnnemy2" parent="AttackingEnnemies" instance=ExtResource("4_f3qkl")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 10, 1, -10)
+STANCE = 0
+
+[node name="AttackingStanceEnnemy3" parent="AttackingEnnemies" instance=ExtResource("4_f3qkl")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 15, 1, -10)
+STANCE = 2
+
+[node name="DefendingEnnemies" type="Node3D" parent="."]
+
+[node name="DefendingStanceEnnemy2" parent="DefendingEnnemies" instance=ExtResource("4_pjhon")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1, -10)
+
+[node name="DefendingStanceEnnemy" parent="DefendingEnnemies" instance=ExtResource("4_pjhon")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1, -10)
 STANCE = 0
 
-[node name="DefendingStanceEnnemy2" parent="." instance=ExtResource("4_pjhon")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1, -10)
-
-[node name="DefendingStanceEnnemy3" parent="." instance=ExtResource("4_pjhon")]
+[node name="DefendingStanceEnnemy3" parent="DefendingEnnemies" instance=ExtResource("4_pjhon")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 1, -10)
 STANCE = 2

@@ -1,26 +1,21 @@
-extends Area3D
-# Player's weapon
+extends AnimationPlayer
+# player's weapon animation
 
 ##### SIGNALS #####
 # Node signals
 
 ##### ENUMS #####
-# enumerations
 
 ##### VARIABLES #####
 #---- CONSTANTS -----
 # const constant = 10 # Optionnal comment
 
 #---- EXPORTS -----
-@export var DAMAGE := {
-	EntityCommon.stances.HIGH: 3,
-	EntityCommon.stances.MIDDLE: 2,
-	EntityCommon.stances.LOW: 1,
-}
+# export(int) var EXPORT_NAME # Optionnal comment
 
 #---- STANDARD -----
 #==== PUBLIC ====
-var stance : = EntityCommon.stances.MIDDLE
+# var public_var # Optionnal comment
 
 #==== PRIVATE ====
 # var _private_var # Optionnal comment
@@ -42,9 +37,23 @@ func _process(_delta):
 	pass
 
 ##### PUBLIC METHODS #####
-# Methods that are intended to be "visible" to other nodes or scripts
-# func public_method(arg ):
-#     pass
+func play_stance_idle(stance : EntityCommon.stances) -> void:
+	match stance:
+		EntityCommon.stances.HIGH:
+			play("idle_high")
+		EntityCommon.stances.MIDDLE:
+			play("idle_middle")
+		EntityCommon.stances.LOW:
+			play("idle_low")
+
+func play_stance_attack(stance : EntityCommon.stances) -> void:
+	match stance:
+		EntityCommon.stances.HIGH:
+			play("attack_high")
+		EntityCommon.stances.MIDDLE:
+			play("attack_middle")
+		EntityCommon.stances.LOW:
+			play("attack_low")
 
 ##### PROTECTED METHODS #####
 # Methods that are intended to be used exclusively by this scripts
@@ -52,6 +61,5 @@ func _process(_delta):
 #     pass
 
 ##### SIGNAL MANAGEMENT #####
-func _on_body_entered(body):
-	if body.is_in_group("ennemy") and body.has_method("hurt"):
-		body.hurt(DAMAGE[stance], stance)
+# Functions that should be triggered when a specific signal is received
+

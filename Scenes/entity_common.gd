@@ -39,9 +39,36 @@ func _process(_delta):
 	pass
 
 ##### PUBLIC METHODS #####
-# Methods that are intended to be "visible" to other nodes or scripts
-# func public_method(arg ):
-#     pass
+# high -> low
+# low -> middle
+# middle -> high
+static func defending_stance_multiplier(user_stance : EntityCommon.stances, defending_stance: EntityCommon.stances) -> int:
+	match user_stance:
+		EntityCommon.stances.HIGH:
+			match defending_stance:
+				EntityCommon.stances.HIGH:
+					return 0
+				EntityCommon.stances.MIDDLE:
+					return 2
+				EntityCommon.stances.LOW:
+					return 1
+		EntityCommon.stances.MIDDLE:
+			match defending_stance:
+				EntityCommon.stances.HIGH:
+					return 1
+				EntityCommon.stances.MIDDLE:
+					return 0
+				EntityCommon.stances.LOW:
+					return 2
+		EntityCommon.stances.LOW:
+			match defending_stance:
+				EntityCommon.stances.HIGH:
+					return 2
+				EntityCommon.stances.MIDDLE:
+					return 1
+				EntityCommon.stances.LOW:
+					return 0
+	return 1 # default case, should not happen 
 
 ##### PROTECTED METHODS #####
 # Methods that are intended to be used exclusively by this scripts

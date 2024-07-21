@@ -53,5 +53,5 @@ func _process(_delta):
 
 ##### SIGNAL MANAGEMENT #####
 func _on_body_entered(body):
-	if body.is_in_group("ennemy") and body.has_method("hurt"):
+	if body.is_in_group("player") and body.has_method("hurt"):
 		body.hurt(DAMAGE[stance], stance)
