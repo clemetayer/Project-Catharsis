@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://cmejnw174nnx0"]
+[gd_scene load_steps=6 format=3 uid="uid://cmejnw174nnx0"]
 
 [ext_resource type="Script" path="res://Scenes/Player/player.gd" id="1_xrrfq"]
+[ext_resource type="PackedScene" uid="uid://ceqi6jljt6py0" path="res://Scenes/Player/player_weapon.tscn" id="2_paubl"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_kjpxn"]
 
@@ -11,6 +12,9 @@ size = Vector3(0.1, 0.1, 1)
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_xrrfq")
+
+[node name="PlayerWeapon" parent="." instance=ExtResource("2_paubl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.5)
 
 [node name="BodyMeshes" type="Node3D" parent="."]
 

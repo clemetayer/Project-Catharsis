@@ -10,7 +10,6 @@ extends CharacterBody3D
 ##### VARIABLES #####
 #---- CONSTANTS -----
 const SPEED = 5.0
-const JUMP_VELOCITY = 4.5
 
 #---- EXPORTS -----
 # export(int) var EXPORT_NAME # Optionnal comment
