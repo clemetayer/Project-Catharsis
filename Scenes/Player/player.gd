@@ -16,7 +16,7 @@ const SPEED = 5.0
 
 #---- STANDARD -----
 #==== PUBLIC ====
-# var public_var # Optionnal comment
+var _stance := PlayerCommon.stances.FAST
 
 #==== PRIVATE ====
 var _gravity : float = ProjectSettings.get_setting("physics/3d/default_gravity") # Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -27,6 +27,7 @@ var _direction := Vector2.ZERO # direction from the w/a/s/d keys, "flattened" to
 @onready var onready_paths := {
 	"rotation_helper": $"RotationHelper",
 	"camera": $"RotationHelper/Camera3D",
+	"weapon": $"RotationHelper/PlayerWeapon"
 }
 
 ##### PROCESSING #####
@@ -49,7 +50,7 @@ func _input(event):
 		# Rotation around the x axis
 		onready_paths.rotation_helper.rotate_x(-deg_to_rad(event.relative.y * _mouse_sensitivity))
 		var camera_rot = onready_paths.rotation_helper.rotation_degrees
-		camera_rot.x = clamp(camera_rot.x, -75, 95) # 90° +- camera angle
+		camera_rot.x = clamp(camera_rot.x, -90, 90) # 90° +- camera angle
 		onready_paths.rotation_helper.rotation_degrees = camera_rot
 
 func _physics_process(delta):
@@ -81,6 +82,8 @@ func _physics_process(delta):
 func _handle_inputs() -> void:
 	_handle_remove_mouse_mode_capture()
 	_handle_direction_inputs()
+	_handle_stance_inputs()
+	_handle_attack_inputs()
 	
 func _handle_direction_inputs() -> void:
 	_direction = Vector2.ZERO # reset the direction
@@ -93,6 +96,22 @@ func _handle_direction_inputs() -> void:
 	if Input.is_action_pressed("Right"):
 		_direction.y += 1
 	_direction = _direction.normalized()
+
+func _handle_stance_inputs() -> void:
+	if Input.is_action_just_pressed("stance_fast"):
+		_switch_stance(PlayerCommon.stances.FAST)
+	elif Input.is_action_just_pressed("stance_defense"):
+		_switch_stance(PlayerCommon.stances.DEFENSE)
+	elif Input.is_action_just_pressed("stance_strong"):
+		_switch_stance(PlayerCommon.stances.STRONG)
+
+func _switch_stance(stance : PlayerCommon.stances) -> void:
+	onready_paths.weapon.change_stance(stance)
+	_stance = stance
+
+func _handle_attack_inputs() -> void:
+	if Input.is_action_just_pressed("attack"):
+		onready_paths.weapon.attack(_stance)
 
 # Temporary, to free the mouse by pressing escape
 func _handle_remove_mouse_mode_capture() -> void:

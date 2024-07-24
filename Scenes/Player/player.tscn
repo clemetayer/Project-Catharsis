@@ -13,9 +13,6 @@ size = Vector3(0.1, 0.1, 1)
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_xrrfq")
 
-[node name="PlayerWeapon" parent="." instance=ExtResource("2_paubl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.5)
-
 [node name="BodyMeshes" type="Node3D" parent="."]
 
 [node name="Body" type="MeshInstance3D" parent="BodyMeshes"]
@@ -24,13 +21,19 @@ skeleton = NodePath("../..")
 
 [node name="LookDirection" type="MeshInstance3D" parent="BodyMeshes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -0.75)
+visible = false
 mesh = SubResource("BoxMesh_v8yvs")
 
 [node name="BodyCollision" type="CollisionShape3D" parent="."]
 shape = SubResource("CylinderShape3D_ruica")
 
 [node name="RotationHelper" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -0.6)
+
+[node name="PlayerWeapon" parent="RotationHelper" instance=ExtResource("2_paubl")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, -1)
 
 [node name="Camera3D" type="Camera3D" parent="RotationHelper"]
-transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 1.25, 3.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 current = true
+fov = 90.0
