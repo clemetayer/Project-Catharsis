@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://pfw58w4uu1dn"]
+[gd_scene load_steps=7 format=3 uid="uid://pfw58w4uu1dn"]
 
 [ext_resource type="PackedScene" uid="uid://d4depmc4sfihq" path="res://Scenes/Maps/sandbox_map.tscn" id="1_36y08"]
 [ext_resource type="PackedScene" uid="uid://cmejnw174nnx0" path="res://Scenes/Player/player.tscn" id="1_i5iif"]
+[ext_resource type="PackedScene" uid="uid://bw4te67mnwecp" path="res://Scenes/Ennemies/BasicEnnemy/basic_ennemy.tscn" id="3_007hd"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_suqw1"]
 
@@ -18,8 +19,11 @@ ssr_enabled = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_caemx")
 
+[node name="SandboxMap" parent="." instance=ExtResource("1_36y08")]
+
 [node name="Player" parent="." instance=ExtResource("1_i5iif")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 collision_layer = 2
 
-[node name="SandboxMap" parent="." instance=ExtResource("1_36y08")]
+[node name="BasicEnnemy" parent="." instance=ExtResource("3_007hd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -10)
